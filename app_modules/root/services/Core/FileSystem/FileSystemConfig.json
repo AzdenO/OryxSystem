@@ -1,0 +1,13 @@
+{
+  "Meta": {
+    "Version": "0.1"
+  },
+  "RootDirectory": "O:/",
+  "IgnoreOwn": true,
+  "whitelist": ["Console","Security","Library"],
+  "StrictRegistering": true,
+  "CoreRequirements": ["Library","Console","Security"],
+  "Partitions": {
+
+  }
+}

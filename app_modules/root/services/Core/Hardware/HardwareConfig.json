@@ -1,0 +1,6 @@
+{
+  "Meta": {
+    "Version": "0.1"
+  },
+  "CoreRequirements": ["Console","Library","FileSystem"]
+}

@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@400..900&display=swap");
+@import "tailwindcss";
+
+.orbitron{
+    font-family: 'Orbitron', 'sans-serif';
+}
+
+.main_bg{
+    background-image: url('./assets/main_bg.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

@@ -1,0 +1,15 @@
+{
+  "Meta": {
+    "Version": "0.1"
+  },
+  "CoreRequirements": ["Console", "Library","Hardware"],
+
+  "ArgonParameters": {
+    "type": 2,
+    "timeCost": 20,
+    "memoryCost": 524288,
+    "parallelism": 6,
+    "hashLength": 32,
+    "raw": true
+  }
+}

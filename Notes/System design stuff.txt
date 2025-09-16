@@ -1,0 +1,66 @@
+Initialised by main:
+
+-Main Init (initialises electron and comms handler)
+system initialisation ()
+-System (passes reference to system initialisation)
+
+Main flow:
+
+-initialises electron and comms handler(through MainInitialisation.js, main.js passes main the fs dep)
+-
+
+Tool Directory:
+
+-each tool has its own directory in "services"
+-each directory has a minimum of:
+	
+	-"TOOLNAME"Main.js
+	-"TOOLNAME".ocf
+	-"TOOLNAME".config (contains info such as version, etc.)
+	
+-tools are loaded dyanmically:
+
+		-ToolLoader finds all directories in "services"
+		-dynamically loads each main class and instantiates (passing in library function so tools can request dependencies)
+		-loads data from each tools .ocf file (Oryx Command Format)
+		-passes back to system an object containing singletons of all tools, as well as an object of all tools OCF files
+
+-each tool main complies with the following, through inheriting an abstract "Tool class":
+	
+	-handle method (taking the command string and an object containing data arguments)
+	-init method (can do anything and return anything)
+	-Tool should NOT change constructor, all tools must have identical constructor signature and init signature
+
+-tool instantiation:
+
+	-each tool will have an identical init, constructor and handle method
+	-constructor will take one argument, the Library service which offers access to certain node modules
+	tools can make use of. Acts as a dependency manager for all tools
+
+-core instantiation:
+
+	-some tools are part of core system services
+	-these are loaded before any secondary tools
+	-All inherit from the CoreAbstract class
+
+-command parser
+
+	-each command starts at system, which passes the command to the command parser
+	-at initialisation, system recieves all tools OCFs, and passes these to the parser to construct a command graph
+	-command parser acts as command validator, performing sanity checks
+	-system also verifies a token that is required to execute any command
+	-system (after validation) will pass command string to correct tool (tools handle the command themselves), the system
+	simply uses the first keyword in the command string to pass the command to the appropriate tool
+	
+-File System
+
+	-handles all interaction with base OS file system
+	-loading data
+	-storing data
+	-viewing file system
+	-deleting and creating files, directories etc.
+	-each tool can only access its own partition of the file system, all tools must register with the file system
+	at system initialisation (each tool must request the file system from the library and use the appropriate method
+	to register)
+	-file system config contains a list of tools it will give access too, and a switch in the config as to whether this
+	should be enforced

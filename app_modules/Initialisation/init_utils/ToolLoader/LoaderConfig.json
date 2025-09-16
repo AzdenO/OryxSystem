@@ -1,0 +1,15 @@
+
+{
+  "Meta": {
+    "Version": "0.1.1"
+  },
+
+  "CoreLoadOrder": ["Console", "Library", "Hardware", "FileSystem","Security"],
+
+  "ToolDirectories": {
+    "ToolsDirectory": "../../../root/services",
+    "Core": "/Core",
+    "Secondary": "/Secondary"
+  },
+  "LoadReject": []
+}

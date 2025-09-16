@@ -1,0 +1,22 @@
+/**
+ * @module ClassValidator
+ * @description Module providing validation services to ensure tools are of the correct specification
+ * and standardisation parameters
+ * @version 0.1
+ * @author DRAW
+ */
+import {ClassReferences} from "./ClassReferences.js";
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function validateParent(refcode,obj){
+    return obj instanceof refcode;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+function getClassReferences(){
+    return ClassReferences;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+export default {
+    validateParent,
+    getClassReferences,
+}
