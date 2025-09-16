@@ -38,4 +38,3 @@ Services/Tools are seperated into two seperate types; core and secondary. Core s
 - Centralised Library service acting as a dependency manager for all core and secondary services (where core services can request one another, secondary services can access core, and where all services can request node libraries)
 - FileSystem service where all file system interaction occurs
 - Console service where every service can register events that can be recorded and saved. An abstract application logging service
-- Remotely accessible REST API for interacting with the application from a mobile or web-based client
