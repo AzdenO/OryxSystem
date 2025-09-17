@@ -7,7 +7,7 @@
   "CoreLoadOrder": ["Console", "Library", "Hardware", "FileSystem","Security"],
 
   "ToolDirectories": {
-    "ToolsDirectory": "../../../root/services",
+    "ToolsDirectory": "../oryxsystem/app_modules/root/services",
     "Core": "/Core",
     "Secondary": "/Secondary"
   },

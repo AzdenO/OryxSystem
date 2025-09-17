@@ -20,10 +20,11 @@ async function loadTools(){
     if(!tooldata){
         throw new Error("Core service initialisation failed");
     }
+    return tooldata;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function loadParser(){
-
+async function loadParser(syntaxData){
+    const processor = new CommandParser(syntaxData);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadSystemService(){
@@ -32,14 +33,16 @@ async function loadSystemService(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function initialize(){
     try{
-        await loadTools();
-        await loadParser();
+        const data = await loadTools();
+        await loadParser(data.ocf);
         await loadSystemService();
     }catch(err){
-
+        console.log(err.message);
+        console.log(err.stack);
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 export default {
     initialize,
 }
+await initialize();

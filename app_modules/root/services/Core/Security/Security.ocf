@@ -1,0 +1,6 @@
+F 'authenticate' STRING_VAL [AUTH_OPTION]+
+F 'encrypt' BYTES_VAL+ [AUTH_OPTION]+
+F 'decrypt' BYTES_VAL+ [AUTH_OPTION]+
+F 'validate' STRING_VAL [AUTH_OPTION]+
+T AUTH_OPTION:("-d","-v","-a")
+END

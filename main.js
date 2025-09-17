@@ -10,6 +10,7 @@ import {fileURLToPath} from "url";
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 import CommsHandler from "./app_modules/root/CommsHandler.mjs";
 import {MainInit} from "./app_modules/Initialisation/PrimaryInitialisation.mjs";
+import SystemInitialisation from "./app_modules/Initialisation/SystemInitialisation.mjs";
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +19,7 @@ const dev = true;
 
 const electron = MainInit.initElectron();
 const comms = MainInit.initCommsHandler(electron.ipc);
+await SystemInitialisation.initialize();
 
 electron.app.whenReady().then(() => {
     MainInit.createElectron(dev, __dirname);

@@ -10,6 +10,11 @@ The application will utilise Node.js Electrons chromium based UI, which will com
 
  Each command passed from the front-end will be accompanied by a short-lived access token that is verified first by the core application Security service, before the command is parsed, verified, and passed to the appropriate tool (barring a single command for first authenticating with the application on startup with a password). Any returning data from the tool is passed back to the front-end. 
  
+ ### Parser Generation
+ Alot of the logic for defining the domain language, generating a tree and evaluating expressions, is borrowed from the way in which CPython operates for reading python code. There are some differences, but for tools specifiying commands and the like, it uses similar wildcards and syntax to the PEG (Parsing Expression Grammar) that python uses. If the program on startup cannot find a json file for the syntax tree generated from all .ocf files, it will read them all and generate the tree. There will also be a way within the application itself, to ask it to recompile its parser tree.
+ 
+ There will be a specification in a later version that defines the .ocf syntax once it is more concrete
+ 
  ## Dynamic Service/Tool loading
  
  

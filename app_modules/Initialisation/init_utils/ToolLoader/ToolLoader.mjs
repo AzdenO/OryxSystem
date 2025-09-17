@@ -50,17 +50,19 @@ async function loadModule(path, name){
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 async function getOcf(path, serviceName){
-    await fs.readFile(pathToFileURL(path), "utf8", (err, data) => {
+    await fs.readFile(path, "utf8", (err, data) => {
         if(err){
             throw new Error(`Error loading OCF for tool: ${serviceName}`);
         }else{
             ocfs[serviceName] = data;
+            console.log("OCF Dat: "+data);
         }
     });
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadCore(){
-    const coreDir = Config.ToolDirectories.ToolsDirectory+Config.ToolDirectories.Core;
+    const coreDir = path.resolve(process.cwd(),Config.ToolDirectories.ToolsDirectory+Config.ToolDirectories.Core);
+    console.log(coreDir)
     let current;
 
     try{
@@ -94,7 +96,7 @@ async function loadCore(){
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadSecondaries(){
-    const secondaryDir = Config.ToolDirectories.ToolsDirectory+Config.ToolDirectories.Secondary;
+    const secondaryDir = path.resolve(Config.ToolDirectories.ToolsDirectory)+Config.ToolDirectories.Secondary;
     const tooldirs = readDirectories(secondaryDir);
 
     if(tooldirs.length===0){
@@ -145,4 +147,4 @@ async function init(){
  export default {
     init,
 }
-await init();
+//await init()
