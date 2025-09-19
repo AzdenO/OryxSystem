@@ -15,8 +15,8 @@ import SystemService from "../root/System/SystemService/SystemService.mjs";
 let tooldata;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function loadTools(){
-    tooldata = await ToolLoader.init();
+async function loadTools(__dirname){
+    tooldata = await ToolLoader.init(__dirname);
     if(!tooldata){
         throw new Error("Core service initialisation failed");
     }
@@ -31,13 +31,14 @@ async function loadSystemService(){
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function initialize(){
+async function initialize(__dirname){
     try{
-        const data = await loadTools();
+        const data = await loadTools(__dirname);
         await loadParser(data.ocf);
         await loadSystemService();
     }catch(err){
         console.log(err.message);
+        console.log("System init failure");
         console.log(err.stack);
     }
 }
@@ -45,4 +46,4 @@ async function initialize(){
 export default {
     initialize,
 }
-await initialize();
+//await initialize();

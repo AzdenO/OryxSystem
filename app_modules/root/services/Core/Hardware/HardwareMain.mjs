@@ -12,7 +12,7 @@ export default class HardwareController{
     }
     //////////////////////////////////////////////////////////////////////////
     async init(){
-        console.log(await this.getMotherboardSerial())
+       // console.log(await this.getMotherboardSerial())
     }
     //////////////////////////////////////////////////////////////////////////
     async getMotherboardSerial() {

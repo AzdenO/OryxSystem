@@ -5,10 +5,13 @@ export default  class TreeNode{
     /////////////////////////////////////////////////////////////////////////////////////
 
     constructor(children=null, optional=false,repeatable=false,val){
-        this.children = children;
         this.value = val;
         this.optional = optional;
-        this.repeatable = null;
+        this.repeatable = repeatable;
+        this.children = children;
+        if(this.children == null){
+            this.children=[];
+        }
     }
     /////////////////////////////////////////////////////////////////////////////////////
     setChildren(children){

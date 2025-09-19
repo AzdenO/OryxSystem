@@ -15,11 +15,11 @@ import SystemInitialisation from "./app_modules/Initialisation/SystemInitialisat
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dev = true;
-
+console.log("Working Directory: "+__dirname);
 
 const electron = MainInit.initElectron();
-const comms = MainInit.initCommsHandler(electron.ipc);
-await SystemInitialisation.initialize();
+const comms = await MainInit.initCommsHandler(electron.ipc);
+await SystemInitialisation.initialize(__dirname);
 
 electron.app.whenReady().then(() => {
     MainInit.createElectron(dev, __dirname);

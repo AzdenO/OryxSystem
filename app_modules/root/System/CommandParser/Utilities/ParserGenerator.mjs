@@ -21,8 +21,6 @@ import TreeNode from "../../../SystemUtils/Types/ParserTree/Node.mjs";
  */
 export default function Generate(data){
     syntax = data;
-    console.log(syntax);
-    console.log("Generating tree");
     const rootNode = new TreeNode(null,false,"root");
     serviceIdentify(rootNode);
 }
@@ -30,6 +28,10 @@ export default function Generate(data){
 function serviceIdentify(rootNode){
     for(const[keystring, data] of Object.entries(syntax)){
         console.log(keystring);
+        if(data===""){
+            console.log("Data empty")
+            continue;
+        }
         let serviceNode = new TreeNode(null,false,false,keystring);
         try{
             generateServiceSubTree(keystring, data, serviceNode);
@@ -38,21 +40,29 @@ function serviceIdentify(rootNode){
             console.log(err.message);
             console.log(err.stack);
         }
+        rootNode.appendChild(serviceNode);
 
     }
+    console.log(lookup);
+    tree = rootNode;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function generateServiceSubTree(service, syntax, node){
-    let syntaxPartitions = syntax.split("\n");
+function generateServiceSubTree(service, syntax, serviceNode){
+    let syntaxPartitions = syntax.split("\r\n");
 
     for(let partition of syntaxPartitions){
         const tokens = partition.split(" ");
         if(tokens[0]==="F"){
             tokens.shift();
-            parseFunction(tokens, node)
+            parseFunction(tokens, serviceNode)
         }else if(tokens[0]==="T"){
             tokens.shift();
+            parseType(tokens);
+        }else if(tokens[0]==="END"){
+            console.log(JSON.stringify(serviceNode, null, 2));
+            break;
         }else{
+            console.log(tokens[0])
             throw new Error("Illegal token at line start");
         }
     }
@@ -86,8 +96,29 @@ function parseFunction(tokens, serviceRoot){
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function parseType(){
-
+function parseType(tokens){
+    if(isType(tokens[0])){
+        lookup[tokens[0].replace(/#/g,"")] = parseOptions(tokens[1])
+    }else{
+        throw new Error("Type definition syntax is invalid");
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function parseOptions(optionStmt){
+    const chars = optionStmt.split("");
+    let options = [];
+    if(chars[0]==="(" && chars[chars.length-1]===")"){
+        let inner = optionStmt.replace(/[()]/g,"");
+        let optionI = inner.split(",");
+        for(const option of optionI){
+            if(validOptionSyntax(option)){
+                options.push(option.replace(/"/g,""));
+            }
+        }
+        return options;
+    }else{
+        throw new Error("Options syntax for type definition is invalid");
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -101,8 +132,8 @@ function parseArgument(token){
     let optional = false;
     let multiple = false;
     if(chars[0]==="["){//check if optional
-
-        for(let char in chars){
+    console.log(chars);
+        for(let char of chars){
             if(char==="]"){
                 optional = true;
                 break;
@@ -115,8 +146,8 @@ function parseArgument(token){
     if(chars[chars.length-1]==="+"){
         multiple = true;
     }
-    const val = token.replace(/[\[\]+]/g,"")
-    return new TreeNode(null,optional,val)
+    const val = token.replace(/[\[\]\\r+]/g,"")
+    return new TreeNode(null,optional,multiple,val)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -130,6 +161,11 @@ function isOpCode(token){
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function isType(token){
-
+    let chars = token.split("");
+    return chars[0] === "#" && chars[chars.length - 1] === "#";
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function validOptionSyntax(option){
+    const chars = option.split("");
+    return chars[0] === "\"" && chars[chars.length - 1] === "\"";
+}

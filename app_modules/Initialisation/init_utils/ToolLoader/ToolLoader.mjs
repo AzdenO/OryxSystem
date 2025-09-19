@@ -12,6 +12,7 @@ import Config from "./LoaderConfig.json" with {type: "json"};
 import {CoreLoadError} from "../InitErrors.mjs";
 ////////////////////////////////////////////////////////////////////////////////////////////////
 const toolsdir = "../../../root/services";
+let workingDir = null;
 let tools = {};
 let ocfs ={};
 let parentRefs;
@@ -45,24 +46,22 @@ function readJSON(path){
  */
 async function loadModule(path, name){
 
+    console.log("Loading: ", name);
     const module = await import(pathToFileURL(path).href);
+    console.log("Loaded");
     return module.default;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
-async function getOcf(path, serviceName){
-    await fs.readFile(path, "utf8", (err, data) => {
-        if(err){
-            throw new Error(`Error loading OCF for tool: ${serviceName}`);
-        }else{
-            ocfs[serviceName] = data;
-            console.log("OCF Dat: "+data);
-        }
-    });
+function getOcf(path, serviceName){
+    ocfs[serviceName] = fs.readFileSync(path, "utf8");
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadCore(){
-    const coreDir = path.resolve(process.cwd(),Config.ToolDirectories.ToolsDirectory+Config.ToolDirectories.Core);
-    console.log(coreDir)
+    if(workingDir===undefined){
+        workingDir = "O:/Storage/Dev/Level 1/oryxsystem";
+    }
+    const coreDir = workingDir+Config.ToolDirectories.ToolsDirectory+Config.ToolDirectories.Core;
+    console.log("Tool loader core dir log: "+coreDir);
     let current;
 
     try{
@@ -72,7 +71,7 @@ async function loadCore(){
             const pathtomain = path.join(coreDir, service, `${service}Main.mjs`);
             const pathtoocf = path.join(coreDir, service, `${service}.ocf`);
             const pathtoconfig = path.join(coreDir, service, `${service}Config.json`);
-            await getOcf(pathtoocf, service);
+            getOcf(pathtoocf, service);
             const config = readJSON(pathtoconfig);
             const CoreService = await loadModule(pathtomain, service);
 
@@ -90,13 +89,14 @@ async function loadCore(){
 
     }catch (e) {
         console.log(e.message);
+        console.log("Main function failure");
         throw new CoreLoadError(current);
     }
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadSecondaries(){
-    const secondaryDir = path.resolve(Config.ToolDirectories.ToolsDirectory)+Config.ToolDirectories.Secondary;
+    const secondaryDir = workingDir+Config.ToolDirectories.ToolsDirectory+Config.ToolDirectories.Secondary;
     const tooldirs = readDirectories(secondaryDir);
 
     if(tooldirs.length===0){
@@ -114,7 +114,9 @@ async function loadSecondaries(){
             await getOcf(pathtoocf, dir);
             const Service = await loadModule(pathtomain, dir);
             const instance = new Service(core.Library);
+            console.log(`Loaded: ${dir}`)
             if(!ClassValidator.validateParent(parentRefs.TOOLABSTRACT, instance)){
+                console.log("Validation error");
                 throw new Error(`Tool: ${keystring} does not comply with inheritance policy`);
             }
             instance.init();
@@ -126,11 +128,13 @@ async function loadSecondaries(){
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
-async function init(){
+async function init(__dirname){
+    workingDir = __dirname;
     parentRefs = ClassValidator.getClassReferences();
     try{
         await loadCore();
         await loadSecondaries();
+        console.log("OCFs: "+JSON.stringify(ocfs));
         core["Console"].Library = core["Library"];
         core["Library"].Security = core["Security"];
         return {
