@@ -4,8 +4,9 @@ export default  class TreeNode{
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    constructor(children=null, optional=false,repeatable=false,val){
+    constructor(children=null, optional=false,repeatable=false,val, type){
         this.value = val;
+        this.type = type;
         this.optional = optional;
         this.repeatable = repeatable;
         this.children = children;

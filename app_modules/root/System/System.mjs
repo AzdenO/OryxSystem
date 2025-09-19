@@ -11,27 +11,34 @@ export default class System {
     /**
      * @constructor Constructor for system object, requiring the system initialisation module and security
      * module. Security is initialised upon application startup, and so is not included in SystemInitMod
-     * @param systemInitMod
-     * @param Security
+     * @param secondary
+     * @param core
+     * @param Parser
      */
-    constructor(systemInitMod, Security, Parser) {
+    constructor(core, secondary, Parser) {
 
-        this.systemInitMod = systemInitMod;
-        this.security = Security;
+        this.core = core;
+        this.secondary = secondary;
         this.parser = Parser;
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    async initiateSystem(){
 
-    }
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * @function processor
      * @description Centralised object function for processing command strings received by the IPC
      * @param {String} command_string
+     * @param {any} args Any arguments the command would require
      */
-    async processor(command_string){
-
+    async processor(command_string, args){
+        const taskData = this.parser.parseCommand(command_string, args)
+        const res = taskData.service;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    offload(taskData){
+        switch(service){
+            case "Security":
+                this.core.Security.handle(taskData)
+        }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 }

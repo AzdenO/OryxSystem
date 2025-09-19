@@ -44,3 +44,9 @@ Services/Tools are seperated into two seperate types; core and secondary. Core s
 - FileSystem service where all file system interaction occurs
 - Console service where every service can register events that can be recorded and saved. An abstract application logging service
 - Remotely accessible REST API for interacting with the application from a mobile or web-based client
+
+## Running the application
+
+To run the application, from the project root directory, run the following command:
+
+- npm run start

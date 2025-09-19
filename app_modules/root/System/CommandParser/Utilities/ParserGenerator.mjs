@@ -23,16 +23,17 @@ export default function Generate(data){
     syntax = data;
     const rootNode = new TreeNode(null,false,"root");
     serviceIdentify(rootNode);
+    return [tree, lookup];
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function serviceIdentify(rootNode){
     for(const[keystring, data] of Object.entries(syntax)){
-        console.log(keystring);
+        //console.log(keystring);
         if(data===""){
-            console.log("Data empty")
+            //console.log("Data empty")
             continue;
         }
-        let serviceNode = new TreeNode(null,false,false,keystring);
+        let serviceNode = new TreeNode(null,false,false,keystring, "serviceRoot");
         try{
             generateServiceSubTree(keystring, data, serviceNode);
 
@@ -59,7 +60,7 @@ function generateServiceSubTree(service, syntax, serviceNode){
             tokens.shift();
             parseType(tokens);
         }else if(tokens[0]==="END"){
-            console.log(JSON.stringify(serviceNode, null, 2));
+            //console.log(JSON.stringify(serviceNode, null, 2));
             break;
         }else{
             console.log(tokens[0])
@@ -81,7 +82,8 @@ function parseFunction(tokens, serviceRoot){
             null,
             false,
             false,
-            tokens[0].replace(/'/g,"")
+            tokens[0].replace(/'/g,""),
+            "OpCode"
         );
         serviceRoot.appendChild(opNode);
         tokens.shift();
@@ -147,7 +149,7 @@ function parseArgument(token){
         multiple = true;
     }
     const val = token.replace(/[\[\]\\r+]/g,"")
-    return new TreeNode(null,optional,multiple,val)
+    return new TreeNode(null,optional,multiple,val, "Argument")
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**

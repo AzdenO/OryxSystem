@@ -23,8 +23,9 @@ function createMainWindow(dev, __dirname) {
         width: 1920,
         height: 1080,
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: false,
+            contextIsolation: true,
         }
     });
     if (dev) {

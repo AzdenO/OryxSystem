@@ -9,7 +9,6 @@
 ///////////////////////////////////////////////////IMPORTS/////////////////////////////////////////////////
 import ToolLoader from "./init_utils/ToolLoader/ToolLoader.mjs";
 import CommandParser from "../root/System/CommandParser/CommandParser.mjs";
-import SystemService from "../root/System/SystemService/SystemService.mjs";
 ////////////////////////////////////////////////CONSTANTS//////////////////////////////////////////////////
 
 let tooldata;
@@ -23,8 +22,8 @@ async function loadTools(__dirname){
     return tooldata;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function loadParser(syntaxData){
-    const processor = new CommandParser(syntaxData);
+async function loadParser(syntaxData, console){
+    return new CommandParser(syntaxData, console);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadSystemService(){
@@ -33,9 +32,13 @@ async function loadSystemService(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function initialize(__dirname){
     try{
-        const data = await loadTools(__dirname);
-        await loadParser(data.ocf);
-        await loadSystemService();
+        const toolData = await loadTools(__dirname);
+        const commandParser = await loadParser(toolData.ocf, toolData.core.Console);
+        return{
+            Core: toolData.core,
+            Secondary: toolData.secondary,
+            Parser: commandParser,
+        }
     }catch(err){
         console.log(err.message);
         console.log("System init failure");
